@@ -1,0 +1,12 @@
+diff -uNr lzmq-0.4.4/src/ztimer.c lzmq-0.4.4_patched/src/ztimer.c
+--- lzmq-0.4.4/src/ztimer.c	2017-07-24 15:10:06.000000000 +0200
++++ lzmq-0.4.4_patched/src/ztimer.c	2018-10-15 17:57:38.154124208 +0200
+@@ -21,7 +21,7 @@
+  */
+ #if defined(__WINDOWS__) 
+ 
+-#include <Windows.h>
++#include <windows.h>
+ 
+ #if !defined(USE_TICK_COUNT) && !defined(USE_TICK_COUNT64) && !defined(USE_PERF_COUNT)
+ #  define USE_PERF_COUNT
