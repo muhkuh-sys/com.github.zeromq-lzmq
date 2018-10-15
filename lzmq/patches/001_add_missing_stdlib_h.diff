@@ -1,0 +1,12 @@
+diff -uNr lzmq-0.4.4/src/lzutils.h lzmq-0.4.4_patched/src/lzutils.h
+--- lzmq-0.4.4/src/lzutils.h	2017-07-24 15:10:06.000000000 +0200
++++ lzmq-0.4.4_patched/src/lzutils.h	2018-10-15 16:11:50.422001170 +0200
+@@ -18,6 +18,8 @@
+ #include "lua.h"
+ #include "lauxlib.h"
+ 
++#include <stdlib.h>
++
+ #if defined(_WIN32)
+ typedef SOCKET lzmq_os_sock_t;
+ #else
