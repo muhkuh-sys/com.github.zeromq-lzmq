@@ -1,0 +1,12 @@
+diff -uNr lzmq-0.4.4/CMakeLists.txt lzmq-0.4.4_patched/CMakeLists.txt
+--- lzmq-0.4.4/CMakeLists.txt	2017-07-24 15:10:06.000000000 +0200
++++ lzmq-0.4.4_patched/CMakeLists.txt	2018-10-15 19:41:40.675420788 +0200
+@@ -15,7 +15,7 @@
+   src/zpoller.c  src/zsocket.c
+ )
+ 
+-set ( LZMQ_DEFINE LUAZMQ_USE_SEND_AS_BUF LUAZMQ_USE_TEMP_BUFFERS LUAZMQ_USE_ERR_TYPE_OBJECT )
++set ( LZMQ_DEFINE LUAZMQ_USE_SEND_AS_BUF LUAZMQ_USE_TEMP_BUFFERS LUAZMQ_USE_ERR_TYPE_OBJECT ZMQ_STATIC )
+ 
+ set ( LZTIMER_SRC src/ztimer.c src/lzutils.c )
+ 
