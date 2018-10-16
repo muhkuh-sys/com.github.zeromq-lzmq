@@ -87,7 +87,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq${CMAKE_SHARED_MODULE_SUFFIX}
 	        DESTINATION lua_plugins/)
 	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/timer${CMAKE_SHARED_MODULE_SUFFIX}
-	        DESTINATION lua_plugins/timer/)
+	        DESTINATION lua_plugins/lzmq/)
 
 	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/ffi.lua ${SUB_INSTALL_DIR}/lzmq/loop.lua ${SUB_INSTALL_DIR}/lzmq/poller.lua ${SUB_INSTALL_DIR}/lzmq/threads.lua
 	        DESTINATION lua/lzmq/)
