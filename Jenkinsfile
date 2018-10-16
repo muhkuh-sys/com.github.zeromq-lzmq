@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurperClassic
 
 node {
-    def ARTIFACTS_PATH = 'build/*/lua5.*/targets/jonchki/repository/com/github/hoelzro/lua-term/*'
+    def ARTIFACTS_PATH = 'build/repository/com/github/zeromq/lzmq/*'
     def strBuilds = env.JENKINS_SELECT_BUILDS
     def atBuilds = new JsonSlurperClassic().parseText(strBuilds)
 
@@ -23,7 +23,7 @@ node {
                         ]
                     ],
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://github.com/muhkuh-sys/com.github.hoelzro-lua-term.git']]
+                    userRemoteConfigs: [[url: 'https://github.com/muhkuh-sys/com.github.zeromq-lzmq.git']]
                 ])
 
                 /* Build the project. */
