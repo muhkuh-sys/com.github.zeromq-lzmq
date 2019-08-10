@@ -13,7 +13,7 @@
 	</info>
 	<dependencies>
 		<build-dependency group="org.lua" module="lua" artifact="lua" version="5.2"/>
-		<build-dependency group="com.github.zeromq" module="libzmq" artifact="libzmq" version="4.2.5"/>
+		<build-dependency group="com.github.zeromq" module="libzmq" artifact="libzmq" version="4.3"/>
 		<dependency group="org.lua" module="lua" artifact="lua"/>
 	</dependencies>
 </jonchki-artifact>
