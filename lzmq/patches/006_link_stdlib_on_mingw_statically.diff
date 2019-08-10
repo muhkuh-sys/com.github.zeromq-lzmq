@@ -1,0 +1,14 @@
+diff -uNr lzmq-0.4.4/CMakeLists.txt lzmq-0.4.4_patched/CMakeLists.txt
+--- lzmq-0.4.4/CMakeLists.txt	2017-07-24 15:10:06.000000000 +0200
++++ lzmq-0.4.4_patched/CMakeLists.txt	2018-10-15 20:32:30.772738301 +0200
+@@ -20,6 +20,10 @@
+ set ( LZTIMER_SRC src/ztimer.c src/lzutils.c )
+ 
+ install_lua_module ( lzmq ${LZMQ_SRC} LINK ${ZMQ_LIBRARY} )
++# On mingw link all compiler libraries static.
++IF((CMAKE_SYSTEM_NAME STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
++	SET_PROPERTY(TARGET lzmq PROPERTY LINK_FLAGS "-lgcc -lstdc++ -static-libgcc -static-libstdc++")
++ENDIF((CMAKE_SYSTEM_NAME STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+ 
+ set_target_properties ( lzmq PROPERTIES COMPILE_DEFINITIONS "${LZMQ_DEFINE}" )
+ 
