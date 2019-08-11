@@ -7,7 +7,7 @@ diff -uNr lzmq-0.4.4/CMakeLists.txt lzmq-0.4.4_patched/CMakeLists.txt
  
 -install_lua_module ( lzmq ${LZMQ_SRC} LINK ${ZMQ_LIBRARY} )
 +if ( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
-+  set ( LZMQ_LIBS ${ZMQ_LIBRARY} iphlpapi ws2_32 )
++  set ( LZMQ_LIBS ${ZMQ_LIBRARY} iphlpapi ws2_32 pthread )
 +else ( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 +  set ( LZMQ_LIBS ${ZMQ_LIBRARY} pthread )
 +endif ( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
