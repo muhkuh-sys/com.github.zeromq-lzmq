@@ -49,6 +49,7 @@ mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/lua5.1/build_requirements
 mkdir -p ${BUILD_DIR}/lua5.2/build_requirements
 mkdir -p ${BUILD_DIR}/lua5.3/build_requirements
+mkdir -p ${BUILD_DIR}/lua5.4/build_requirements
 
 
 # Install jonchki.
