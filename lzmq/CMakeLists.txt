@@ -5,7 +5,7 @@ PROJECT("lzmq")
 INCLUDE(ExternalProject)
 
 SET(VERSION_EXTERNAL "0.4.4")
-SET(VERSION_PACKAGE  "4")
+SET(VERSION_PACKAGE  "5")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
 
 # Get the VCS version for the jonchki configuration.
