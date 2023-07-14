@@ -72,18 +72,10 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# This is the folder where the external project TARGET_bitop installed the files.
 	SET(SUB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install/lib/lua")
 
-	IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a windows build.
-		CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_windows.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
-
-	ELSE(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a linux build.
-		CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
-	ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+	# Package a linux build.
+	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
+	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+	               @ONLY)
 
 	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq${CMAKE_SHARED_MODULE_SUFFIX}
 	        DESTINATION lua_plugins/)
