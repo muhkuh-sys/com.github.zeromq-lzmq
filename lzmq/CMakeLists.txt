@@ -1,33 +1,17 @@
-cmake_minimum_required(VERSION 3.2.3)
-
-PROJECT("lzmq")
-
 INCLUDE(ExternalProject)
-
-SET(VERSION_EXTERNAL "0.4.4")
-SET(VERSION_PACKAGE  "5")
-SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
-
-# Get the VCS version for the jonchki configuration.
-INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/version.cmake)
 
 # Filter the jonchki configuration.
 CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/lzmq.xml
                ${CMAKE_BINARY_DIR}/lua${BUILDCFG_LUA_VERSION}-lzmq-${PROJECT_VERSION}.xml
                @ONLY)
 
-
 #----------------------------------------------------------------------------
 #
 # Build the project.
 #
-
 IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Select the LUA version.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_lua.cmake)
-
-	# Python is used for the hashes and the test scripts.
-	FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
 	SET(SUB_CMAKE_ARGS "")
 	LIST(APPEND SUB_CMAKE_ARGS "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
@@ -48,14 +32,13 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	MESSAGE("ZMQ_INCLUDE_DIR=${CMAKE_CURRENT_BINARY_DIR}/build_requirements/jonchki/install/dev/include/")
 
 	ExternalProject_Add(TARGET_lzmq
-	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/lzmq-${VERSION_EXTERNAL}
-	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/lzmq-v${VERSION_EXTERNAL}.tar.gz
+	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/lzmq-${UPSTREAM_VERSION}
+	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/lzmq-v${UPSTREAM_VERSION}.tar.gz
 	                    URL_HASH SHA1=de3a5d1707caf234ca39e50694abb009d90fe318
-	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lzmq-${VERSION_EXTERNAL}/src/TARGET_lzmq --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
+	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lzmq-${UPSTREAM_VERSION}/src/TARGET_lzmq --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
 	                    CMAKE_ARGS ${SUB_CMAKE_ARGS}
 	                    INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
 	)
-
 
 	#----------------------------------------------------------------------------
 	#
@@ -73,7 +56,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(SUB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install/lib/lua")
 
 	# Package a linux build.
-	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
+	CONFIGURE_FILE(installer/install.lua
 	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
 	               @ONLY)
 
@@ -111,15 +94,4 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lzmq-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
 	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lzmq-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.tar.xz
 	                  COMMENT "Pack the artifact and generate the hashes...")
-
-
-	#-----------------------------------------------------------------------------
-	#
-	# Filter the pom.xml file.
-	#
-	SET(POM_ARTIFACT_ID  "lzmq")
-	SET(POM_GROUP_ID     "com.github.zeromq")
-	SET(POM_VERSION      "${PROJECT_VERSION}")
-	SET(POM_PACKAGING    "tar.xz")
-	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/pom.xml ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lzmq-${PROJECT_VERSION}.pom)
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))

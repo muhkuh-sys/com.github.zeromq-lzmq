@@ -35,7 +35,7 @@ strCfg_jonchkiHerePath = os.path.join(
     'jonchki'
 )
 # This is the Jonchki version to use.
-strCfg_jonchkiVersion = '0.0.11.1'
+strCfg_jonchkiVersion = '0.0.13.1'
 # Look in this folder for Jonchki archives before downloading them.
 strCfg_jonchkiLocalArchives = os.path.join(
     strCfg_projectFolder,
@@ -52,7 +52,13 @@ strCfg_jonchkiInstallationFolder = os.path.join(
 
 # Select the verbose level for jonchki.
 # Possible values are "debug", "info", "warning", "error" and "fatal".
-strCfg_jonchkiVerbose = 'info'
+strCfg_jonchkiVerbose = 'debug'
+
+strCfg_jonchkiLog54 = os.path.join(
+    strCfg_workingFolder,
+    'lua5.4',
+    'jonchki.log'
+)
 
 strCfg_jonchkiSystemConfiguration = os.path.join(
     strCfg_projectFolder,
@@ -63,6 +69,10 @@ strCfg_jonchkiProjectConfiguration = os.path.join(
     strCfg_projectFolder,
     'jonchki',
     'jonchkicfg.xml'
+)
+strCfg_jonchkiDependencyLog54 = os.path.join(
+    strCfg_projectFolder,
+    'dependency-log-lua5.4.xml'
 )
 
 # -
@@ -87,63 +97,6 @@ if tPlatform['host_distribution_id'] == 'ubuntu':
             astrCMAKE_COMPILER = []
             astrCMAKE_PLATFORM = []
             astrJONCHKI_SYSTEM = []
-            strMake = 'make'
-
-        elif tPlatform['cpu_architecture'] == 'armhf':
-            # Build on linux for raspberry.
-
-            astrCMAKE_COMPILER = [
-                '-DCMAKE_TOOLCHAIN_FILE=%s/cmake/toolchainfiles/toolchain_ubuntu_armhf.cmake' % strCfg_projectFolder
-            ]
-            astrCMAKE_PLATFORM = [
-                '-DJONCHKI_PLATFORM_DIST_ID=%s' % tPlatform['distribution_id'],
-                '-DJONCHKI_PLATFORM_DIST_VERSION=%s' % tPlatform['distribution_version'],
-                '-DJONCHKI_PLATFORM_CPU_ARCH=%s' % tPlatform['cpu_architecture']
-            ]
-
-            astrJONCHKI_SYSTEM = [
-                '--distribution-id %s' % tPlatform['distribution_id'],
-                '--distribution-version %s' % tPlatform['distribution_version'],
-                '--cpu-architecture %s' % tPlatform['cpu_architecture']
-            ]
-            strMake = 'make'
-
-        elif tPlatform['cpu_architecture'] == 'arm64':
-            # Build on linux for raspberry.
-
-            astrCMAKE_COMPILER = [
-                '-DCMAKE_TOOLCHAIN_FILE=%s/cmake/toolchainfiles/toolchain_ubuntu_arm64.cmake' % strCfg_projectFolder
-            ]
-            astrCMAKE_PLATFORM = [
-                '-DJONCHKI_PLATFORM_DIST_ID=%s' % tPlatform['distribution_id'],
-                '-DJONCHKI_PLATFORM_DIST_VERSION=%s' % tPlatform['distribution_version'],
-                '-DJONCHKI_PLATFORM_CPU_ARCH=%s' % tPlatform['cpu_architecture']
-            ]
-
-            astrJONCHKI_SYSTEM = [
-                '--distribution-id %s' % tPlatform['distribution_id'],
-                '--distribution-version %s' % tPlatform['distribution_version'],
-                '--cpu-architecture %s' % tPlatform['cpu_architecture']
-            ]
-            strMake = 'make'
-
-        elif tPlatform['cpu_architecture'] == 'riscv64':
-            # Build on linux for riscv64.
-
-            astrCMAKE_COMPILER = [
-                '-DCMAKE_TOOLCHAIN_FILE=%s/cmake/toolchainfiles/toolchain_ubuntu_riscv64.cmake' % strCfg_projectFolder
-            ]
-            astrCMAKE_PLATFORM = [
-                '-DJONCHKI_PLATFORM_DIST_ID=%s' % tPlatform['distribution_id'],
-                '-DJONCHKI_PLATFORM_DIST_VERSION=%s' % tPlatform['distribution_version'],
-                '-DJONCHKI_PLATFORM_CPU_ARCH=%s' % tPlatform['cpu_architecture']
-            ]
-
-            astrJONCHKI_SYSTEM = [
-                '--distribution-id %s' % tPlatform['distribution_id'],
-                '--distribution-version %s' % tPlatform['distribution_version'],
-                '--cpu-architecture %s' % tPlatform['cpu_architecture']
-            ]
             strMake = 'make'
 
         else:
@@ -175,6 +128,7 @@ strJonchki = jonchkihere.install(
     LOCAL_ARCHIVES=strCfg_jonchkiLocalArchives
 )
 
+
 # ---------------------------------------------------------------------------
 #
 # Get the build requirements for LUA5.4.
@@ -198,8 +152,10 @@ subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 subprocess.check_call(strMake, shell=True, cwd=strCwd, env=astrEnv)
 
 astrMatch = glob.glob(os.path.join(strCwd, 'lua5.4-lzmq-*.xml'))
-if len(astrMatch) != 1:
+if len(astrMatch) == 0:
     raise Exception('No match found for "lua5.4-lzmq-*.xml".')
+elif len(astrMatch) > 1:
+    raise Exception('More than one match found for "lua5.4-lzmq-*.xml". Clean your build folder.')
 
 astrCmd = [
     strJonchki,
@@ -207,23 +163,14 @@ astrCmd = [
     '--verbose', strCfg_jonchkiVerbose,
     '--syscfg', strCfg_jonchkiSystemConfiguration,
     '--prjcfg', strCfg_jonchkiProjectConfiguration,
-
-    '--logfile', os.path.join(
-        strCfg_workingFolder,
-        'lua5.4',
-        'build_requirements',
-        'jonchki.log'
-    ),
-
-    '--dependency-log', os.path.join(
-        strCfg_projectFolder,
-        'dependency-log.xml'
-    )
+    '--logfile', strCfg_jonchkiLog54,
+    '--dependency-log', strCfg_jonchkiDependencyLog54
 ]
 astrCmd.extend(astrJONCHKI_SYSTEM)
 astrCmd.append('--build-dependencies')
 astrCmd.append(astrMatch[0])
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
+
 
 # ---------------------------------------------------------------------------
 #
